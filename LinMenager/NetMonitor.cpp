@@ -17,7 +17,7 @@ NetMonitor::NetMonitor(QWidget *parent) : QWidget(parent)
     font.setPointSize(19);//Font size - beginning initialization
 
     QFont font_status;
-    font_status.setPointSize(25);
+    font_status.setPointSize(32);
 
 
     //Initialize buttons
@@ -34,6 +34,19 @@ NetMonitor::NetMonitor(QWidget *parent) : QWidget(parent)
     menuButton->setFont(font);
     menuButton->setGeometry(x_pos, y_pos, 300, 60);
     connect(menuButton, &QPushButton::clicked, this, &NetMonitor::backToMenu);//if clicked, go back to welcome page
+
+    //network speed label
+    netSpeedLabel = new QLabel(this);
+    netSpeedLabel->setFont(font_status);
+    netSpeedLabel->setStyleSheet("color: yellow;");
+    netSpeedLabel->setGeometry(20, 50, 900, 60);
+
+    //timer connected with net stats actualisation
+    timerNet = new QTimer(this);
+    connect(timerNet, &QTimer::timeout, this, &NetMonitor::updateNetworkStats);
+    timerNet->start(1000);//actualise after each 1sec
+
+    updateNetworkStats();//get begining values
 }
 
 void NetMonitor::paintEvent(QPaintEvent *event) {
@@ -52,4 +65,18 @@ void NetMonitor::backToMenu()//go back to welcome page
     WelcomePage *WelPage = new WelcomePage();
     WelPage->show();//display Welcome Page
     this->close();//close this page
+}
+
+void NetMonitor::updateNetworkStats()
+{
+    QProcess process;
+    process.start("bash", QStringList() << "-c" << "vnstat -i wlo1 --oneline | awk -F ';' '{print $9, $10}'");
+
+
+
+    process.waitForFinished();//wait for process finish
+    QString netStats = process.readAllStandardOutput().trimmed();//read all output of proces and cut white chars
+
+    //actualise label with new stats
+    netSpeedLabel->setText("Download/Upload Speed: " + netStats + " KB/s");
 }

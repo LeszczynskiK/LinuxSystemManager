@@ -5,7 +5,8 @@ A Qt-based system management tool for Linux. Monitor system performance, manage 
 
 Planned Features:
 1. System Monitor Display CPU, RAM, and disk usage
-2. Monitor network activity (download/upload speed)
+2. Monitor network activity (download/upload speed) - sudo apt install ifstat is a must
+
 3. Task Manager - display and end running process
 4. Calendar & Reminders
 5. Display current time and date Monthly/weekly calendar view

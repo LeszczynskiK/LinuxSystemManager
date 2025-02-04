@@ -50,7 +50,7 @@ LoginWindow::LoginWindow(QWidget *parent) : QWidget(parent)
     turn_on_button->setFont(font);
     turn_on_button->setGeometry(x_pos, y_pos+y_siz, 300, 60);
     turn_on_button->setVisible(false);//if login and password are not ok, button is not visible
-    connect(turn_on_button, &QPushButton::clicked, this, &LoginWindow::openApp);//if clicked, open server-client view
+    connect(turn_on_button, &QPushButton::clicked, this, &LoginWindow::openApp);//if clicked, open main page of app
 
     exit_button = new QPushButton("Exit app...", this);//leave from app
     exit_button->setFont(font);

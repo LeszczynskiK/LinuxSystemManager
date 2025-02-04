@@ -10,11 +10,21 @@ CONFIG += c++17
 
 SOURCES += \
     LoginWindow.cpp \
+    NetMonitor.cpp \
+    Schedule.cpp \
+    StickyNotes.cpp \
+    SystemMonitor.cpp \
+    TaskManager.cpp \
     WelcomePage.cpp \
     main.cpp
 
 HEADERS += \
     LoginWindow.h \
+    NetMonitor.h \
+    Schedule.h \
+    StickyNotes.h \
+    SystemMonitor.h \
+    TaskManager.h \
     WelcomePage.h
 
 FORMS +=

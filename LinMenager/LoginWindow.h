@@ -38,7 +38,7 @@ private:
     bool isLoggedIn = false;//If password and login are typped correctly
 
     QString hashPassword(const QString &password);//function to hash a password
-    QString hashLogin(const QString &login);//function to hash a
+    QString hashLogin(const QString &login);//function to hash a login
 };
 
 #endif // LOGINWINDOW_H

@@ -9,6 +9,7 @@
 #include <QTextEdit>
 #include <QPainter>
 #include <QPaintEvent>
+#include <QVector>
 
 class StickyNotes : public QWidget {
     Q_OBJECT
@@ -17,6 +18,8 @@ private slots:
     void paintEvent(QPaintEvent *event);//background setter
     void exitApp();
     void backToMenu();//go back to welcome page
+    void addStickyNote();//add new sticky note
+    void removeStickyNote();//delete sticky note
 
 public:
     StickyNotes(QWidget *parent = nullptr);
@@ -25,6 +28,9 @@ private:
     QPixmap background;//Background txt
     QPushButton *exitAppButton;
     QPushButton *menuButton;//go to welcome page button
+    QPushButton *addStickyNoteButton;//add sticky note button
+    QVector<QWidget*> stickyNotes;//vector to hold sticky notes widgets
+    QWidget *note;//sticky note
 };
 
 #endif // STICKYNOTES_H

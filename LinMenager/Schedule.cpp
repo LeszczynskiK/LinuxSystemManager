@@ -35,6 +35,28 @@ Schedule::Schedule(QWidget *parent) : QWidget(parent)
     menuButton->setFont(font);
     menuButton->setGeometry(x_pos, y_pos, 300, 60);
     connect(menuButton, &QPushButton::clicked, this, &Schedule::backToMenu);//if clicked, go back to welcome page
+
+    //Etiquette to show date and time
+    dateTimeLabel = new QLabel(this);
+    dateTimeLabel->setFont(font_status);
+    dateTimeLabel->setGeometry(20, 20, 350, 50);
+    dateTimeLabel->setStyleSheet("color: white; background-color: rgba(0, 0, 0, 150); border-radius: 10px;");
+    dateTimeLabel->setAlignment(Qt::AlignCenter);
+
+    //Time rto actualise hour
+    QTimer *timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &Schedule::updateDateTime);
+    timer->start(1000);//refresh by each 1 sec
+    updateDateTime();//set beginning data
+
+    //dairy initialisation
+    calendar = new QCalendarWidget(this);
+    calendar->setGeometry(20, 100, 350, 350);
+    calendar->setStyleSheet("background-color: white; border-radius: 10px;");
+    calendar->setGridVisible(true);//turn on grid between days
+    calendar->setNavigationBarVisible(true);//navigation bar in months changing
+    calendar->setVerticalHeaderFormat(QCalendarWidget::NoVerticalHeader);//hide weeks numbers
+    calendar->setHorizontalHeaderFormat(QCalendarWidget::NoHorizontalHeader);//hide weeks numbers
 }
 
 void Schedule::paintEvent(QPaintEvent *event) {
@@ -52,4 +74,9 @@ void Schedule::backToMenu()//go back to welcome page
     WelcomePage *WelPage = new WelcomePage();
     WelPage->show();//display Welcome Page
     this->close();//close this page
+}
+
+void Schedule::updateDateTime()//actualise by each 1 sec
+{
+    dateTimeLabel->setText(QDateTime::currentDateTime().toString("dd.MM.yyyy HH:mm:ss"));
 }

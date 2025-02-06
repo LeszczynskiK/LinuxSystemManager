@@ -67,16 +67,7 @@ void NetMonitor::backToMenu()//go back to welcome page
     this->close();//close this page
 }
 
-void NetMonitor::updateNetworkStats()
-{
-    QProcess process;
-    process.start("bash", QStringList() << "-c" << "vnstat -i wlo1 --oneline | awk -F ';' '{print $9, $10}'");
+void NetMonitor::updateNetworkStats() {
 
-
-
-    process.waitForFinished();//wait for process finish
-    QString netStats = process.readAllStandardOutput().trimmed();//read all output of proces and cut white chars
-
-    //actualise label with new stats
-    netSpeedLabel->setText("Download/Upload Speed: " + netStats + " KB/s");
 }
+

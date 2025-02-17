@@ -5,7 +5,10 @@ A Qt-based system management tool for Linux. Monitor system performance, manage 
 
 Planned Features:
 1. System Monitor Display CPU, RAM, and disk usage
-2. Monitor network activity (download/upload speed) - sudo apt install ifstat is a must
+2. Monitor network activity (download/upload speed/ping) : (will base on speedtest-cli)   
+- sudo apt update 
+- sudo apt install speedtest-cli  
+- sudo apt upgrade speedtest-cli    
 
 3. Task Manager - display and end running process
 4. Calendar & Reminders

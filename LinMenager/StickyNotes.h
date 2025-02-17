@@ -10,6 +10,8 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include <QVector>
+#include <QScrollArea>
+#include <QHBoxLayout>
 
 class StickyNotes : public QWidget {
     Q_OBJECT
@@ -30,6 +32,8 @@ private:
     QPushButton *menuButton;//go to welcome page button
     QPushButton *addStickyNoteButton;//add sticky note button
     QVector<QWidget*> stickyNotes;//vector to hold sticky notes widgets
+    QHBoxLayout *layout;//scrollable layout for notes
+    QWidget *scrollWidget;//scroll widget object
 };
 
 #endif // STICKYNOTES_H

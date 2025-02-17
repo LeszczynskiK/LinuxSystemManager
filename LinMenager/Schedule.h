@@ -10,6 +10,7 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include <QDateTime>
+#include <QDateEdit>
 #include <QTimer>
 #include <QCalendarWidget>
 #include <QTimeEdit>
@@ -36,9 +37,10 @@ private:
     QCalendarWidget *calendar;//Calendar widget
 
     QTimeEdit *timeEdit;//to keep time of notifiction display
+    QDateEdit *dateEdit;//to keep date of notification display
     QTextEdit *notificationText;//to put text of notification
     QPushButton *addNotificationButton;//button to add notification
-    QList<QPair<QTime, QString>> notifications;//list of notification(pair of time and notification text)
+    QList<QPair<QDateTime, QString>> notifications;//list of notification(pair of time+date and notification text)
 };
 
 #endif // SCHEDULE_H

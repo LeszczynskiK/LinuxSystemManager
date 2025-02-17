@@ -20,6 +20,23 @@ StickyNotes::StickyNotes(QWidget *parent) : QWidget(parent)
     QFont font_status;
     font_status.setPointSize(25);
 
+   //scrollable area to see all sticky notes added
+    QScrollArea *scrollArea = new QScrollArea(this);
+    scrollArea->setGeometry(0, 100, 1280, 320);
+    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);//horisontal scroll on for notes scrolling area
+    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);//vertical scroll off for notes scrolling area
+
+    scrollWidget = new QWidget();//create widget to keep all notes inside to make it scrollable
+    scrollWidget->setFixedHeight(320);//constant height for notes
+
+    //set layout for notes
+    layout = new QHBoxLayout(scrollWidget);//make organised layout to keep notes
+    layout->setSpacing(10);//space between notes
+
+    scrollWidget->setLayout(layout);//scrollwidget is based on QHBoxLayout
+    scrollArea->setWidget(scrollWidget);//scrollable area is made of scrollDidgets(aka notes)
+    scrollArea->setWidgetResizable(false);//const size of notes
+
 
     //Initialize buttons
     int x_pos=20;
@@ -81,7 +98,7 @@ void StickyNotes::addStickyNote() {
         }
 
         if(!isOccupied){//if position not taken by sticky card
-            QWidget *note = new QWidget(this); //create a new sticky note
+            QWidget *note = new QWidget(scrollWidget); //create a new sticky note
             note->setStyleSheet("background-color: yellow; border: 1px solid black;");
             note->setGeometry(posX, baseY, 250, 250);//positioning new sticky notes dynamically
 
@@ -100,9 +117,14 @@ void StickyNotes::addStickyNote() {
                 removeStickyNote(note);
             });
 
+            layout->addWidget(note);//add card to scrollable layout
             note->show();
             stickyNotes.append(note);//keep the new note in the vector
             found=true;
+
+            //actualise size of scrollable area (based on notes amount and its sizes) -> only for increasing amount of notes
+            int totalWidth = (stickyNotes.size() * (250 + layout->spacing())) + layout->spacing();
+            scrollWidget->setFixedWidth(totalWidth);
         }
         index++;//change number of currently checked position(index is number of card)
     }
@@ -110,6 +132,12 @@ void StickyNotes::addStickyNote() {
 
 void StickyNotes::removeStickyNote(QWidget *noteToRemove) {
     stickyNotes.removeOne(noteToRemove); // remove note from the vector
+    layout->removeWidget(noteToRemove);//delete note from scrollable area
     noteToRemove->deleteLater(); // delete the note safely
+
+
+    //actualise size-> is notes deletes, actualise size of scrollable area..
+    int totalWidth = (stickyNotes.size() * (250 + layout->spacing())) + layout->spacing();
+    scrollWidget->setFixedWidth(totalWidth);
 }
 

@@ -60,22 +60,28 @@ Schedule::Schedule(QWidget *parent) : QWidget(parent)
 
 
     //notification values
-    int y_start=350;
+    int y_start=150;
     int x_start=600;
     int text_y=250;
     int text_x=150+300;
     QFont fontTime;
-    fontTime.setPointSize(16);
+    fontTime.setPointSize(19);
     QFont fontTextNot;
-    fontTextNot.setPointSize(14);
+    fontTextNot.setPointSize(21);
 
     timeEdit = new QTimeEdit(this);//put time of notification
-    timeEdit->setGeometry(x_start, y_start-20, 150,60);
+    timeEdit->setGeometry(x_start+20, y_start-20, 130,60);
     timeEdit->setDisplayFormat("HH:mm");//format of notification time is:Hour,minute
     timeEdit->setFont(fontTime);
 
+    dateEdit = new QDateEdit(QDate::currentDate(), this);
+    dateEdit->setGeometry(x_start-150, y_start-20, 170,60);
+    dateEdit->setDisplayFormat("dd.MM.yyyy");//format of notification time is:Day,month,year
+    dateEdit->setFont(fontTime);
+    dateEdit->setCalendarPopup(true);//if clicked in dateEdit field, open calendar immediately to choose date...
+
     notificationText = new QTextEdit(this);
-    notificationText->setGeometry(x_start, y_start+40, text_x, text_y);//field for text of notification
+    notificationText->setGeometry(x_start-150, y_start+40, text_x+150, text_y+200);//field for text of notification
     notificationText->setFont(fontTextNot);
 
     addNotificationButton = new QPushButton("Add Notification", this);//button to add notification
@@ -108,20 +114,22 @@ void Schedule::updateDateTime()//actualise by each 1 sec
     dateTimeLabel->setText(QDateTime::currentDateTime().toString("dd.MM.yyyy HH:mm:ss"));
 
     //Check if there is any notification connected with current time
-    QTime currentTime = QTime::currentTime();//put current time to variable
-    qDebug() << "Current time:" << currentTime.toString();
+    QDateTime currentDateTime = QDateTime::currentDateTime();//Date time value holder...
+
     for (int i = 0; i < notifications.size(); ++i) {//iterate throw list with notifications
-        if (notifications[i].first.hour() == currentTime.hour() &&//if current hour is equal to notification one
-            notifications[i].first.minute() == currentTime.minute()) {//and the same with minutes...
+        if (notifications[i].first.date() == currentDateTime.date() &&//if real date is equal to notification one
+            notifications[i].first.time().hour() == currentDateTime.time().hour() &&//if current hour is equal to notification one
+            notifications[i].first.time().minute() == currentDateTime.time().minute()) {//and the same with minutes..
             QMessageBox::information(this, "Notification", notifications[i].second);//.second part is notification text..
-            notifications.removeAt(i);//delete after displaying
-            break;//if found - break loop
+            notifications.removeAt(i);
+            break;
         }
     }
 }
 
 void Schedule::addNotification() {
     QTime notificationTime = timeEdit->time();//get time from field
+    QDate notificationDate = dateEdit->date();//get date from field
     QString notificationMessage = notificationText->toPlainText();//put to plain text value from notifivationText field and save as QString
 
     if (notificationMessage.isEmpty()) {//if empty message
@@ -129,7 +137,7 @@ void Schedule::addNotification() {
         return;
     }
 
-    //Add notification to list(pair of time and text)
-    notifications.append(qMakePair(notificationTime, notificationMessage));
+    //Add notification to list(pair of date+time and text)
+    notifications.append(qMakePair(QDateTime(notificationDate, notificationTime), notificationMessage));
     notificationText->clear();//clear text field after adding
 }

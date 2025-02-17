@@ -60,24 +60,52 @@ void StickyNotes::backToMenu()//go back to welcome page
 }
 
 void StickyNotes::addStickyNote() {
-    QWidget *note = new QWidget(this); //create a new sticky note
-    note->setStyleSheet("background-color: yellow; border: 1px solid black;");
-    note->setGeometry(50 + stickyNotes.size() * 250, 50, 250, 250);//positioning new sticky notes dynamically
 
-    QTextEdit *textEdit = new QTextEdit(note);//add QText widget inside sticky note view
-    textEdit->setGeometry(10, 10, 230, 230);
-    textEdit->setStyleSheet("Color: black;");
+    int baseX = 50;
+    int baseY = 50;
+    int offsetX = 250;
 
-    QPushButton *closeButton = new QPushButton("Close", note);//close button to close actual sticky note
-    closeButton->setStyleSheet("Color: black;");
-    closeButton->setGeometry(10, 205, 230, 35);
+    int index = 0;//number of note
+    bool found = false;//sticky note is found?
+    while (!found) {//if not found
+        //check if there is a sticky note
+        int posX = baseX + index * offsetX;//check position of sticky note number index
+        bool isOccupied = false;//is this place taken by sticky note number index?
 
-    connect(closeButton, &QPushButton::clicked, this, [=]() {
-        removeStickyNote(note);
-    });
+        for (QWidget *note : stickyNotes) {//iterate throw all of the sticky notes
+            if (note->geometry().x() == posX) {//if position counter by posX is equal to real position of cticky note
+                //means that there is sticky note
+                isOccupied = true;//so change bool variable to true, becouse there is a sticky note
+                break;
+            }
+        }
 
-    note->show();
-    stickyNotes.append(note); // keep the new note in the vector
+        if(!isOccupied){//if position not taken by sticky card
+            QWidget *note = new QWidget(this); //create a new sticky note
+            note->setStyleSheet("background-color: yellow; border: 1px solid black;");
+            note->setGeometry(posX, baseY, 250, 250);//positioning new sticky notes dynamically
+
+            QTextEdit *textEdit = new QTextEdit(note);//add QText widget inside sticky note view
+            textEdit->setGeometry(10, 10, 230, 230);
+            textEdit->setStyleSheet("Color: black;");
+
+            QPushButton *closeButton = new QPushButton("Close", note);//close button to close actual sticky note
+            closeButton->setStyleSheet("Color: black;");
+            closeButton->setGeometry(10, 205, 230, 35);
+
+            connect(closeButton, &QPushButton::clicked, this, [=]() {//if clicked, run lambda function which will remove sticky note
+                // = - with this it will remember copy of note, so even if lambda function is addStickyNote(main function)
+                //is over, lambda function will still remember note value, which has to put to removeStickyNote
+                //as an argument (this exact note - co = will remember note)
+                removeStickyNote(note);
+            });
+
+            note->show();
+            stickyNotes.append(note);//keep the new note in the vector
+            found=true;
+        }
+        index++;//change number of currently checked position(index is number of card)
+    }
 }
 
 void StickyNotes::removeStickyNote(QWidget *noteToRemove) {

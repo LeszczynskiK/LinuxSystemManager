@@ -10,12 +10,11 @@ Planned Features:
 - sudo apt install speedtest-cli  
 - sudo apt upgrade speedtest-cli    
 
-3. Task Manager - display and end running process
+3. Task Manager - display and end running process(by typing PID number)
 4. Calendar & Reminders
 5. Display current time and date Monthly/weekly calendar view
-6. Add reminders with system notifications
-7. Sticky Notes & Notifications
-8. Auto-save notes on close
-9. System notifications for important tasks(remind about any event at exact written date)
+6. Add reminders with system notifications(based on time scheduler and displayer on typed time...)
+7. Sticky Notes & Notifications displayed on screen view
+8. Auto-save notes and notification on close
 
 Acces to linux menager is after succes login on welcome page(hashed password and loggin)

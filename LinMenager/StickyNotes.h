@@ -19,7 +19,7 @@ private slots:
     void exitApp();
     void backToMenu();//go back to welcome page
     void addStickyNote();//add new sticky note
-    void removeStickyNote();//delete sticky note
+    void removeStickyNote(QWidget *noteToRemove);//delete sticky note(the exact one)
 
 public:
     StickyNotes(QWidget *parent = nullptr);
@@ -30,7 +30,6 @@ private:
     QPushButton *menuButton;//go to welcome page button
     QPushButton *addStickyNoteButton;//add sticky note button
     QVector<QWidget*> stickyNotes;//vector to hold sticky notes widgets
-    QWidget *note;//sticky note
 };
 
 #endif // STICKYNOTES_H

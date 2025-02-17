@@ -60,7 +60,7 @@ void StickyNotes::backToMenu()//go back to welcome page
 }
 
 void StickyNotes::addStickyNote() {
-    note = new QWidget(this); //create a new sticky note
+    QWidget *note = new QWidget(this); //create a new sticky note
     note->setStyleSheet("background-color: yellow; border: 1px solid black;");
     note->setGeometry(50 + stickyNotes.size() * 250, 50, 250, 250);//positioning new sticky notes dynamically
 
@@ -71,15 +71,17 @@ void StickyNotes::addStickyNote() {
     QPushButton *closeButton = new QPushButton("Close", note);//close button to close actual sticky note
     closeButton->setStyleSheet("Color: black;");
     closeButton->setGeometry(10, 205, 230, 35);
-    connect(closeButton, &QPushButton::clicked, this, &StickyNotes::removeStickyNote);//remove sticky note
+
+    connect(closeButton, &QPushButton::clicked, this, [=]() {
+        removeStickyNote(note);
+    });
 
     note->show();
-    stickyNotes.append(note);//keep the note in vector
+    stickyNotes.append(note); // keep the new note in the vector
 }
 
-void StickyNotes::removeStickyNote() {
-    stickyNotes.removeOne(note);//remove note from the vector
-    note->deleteLater();
-    note =nullptr;
+void StickyNotes::removeStickyNote(QWidget *noteToRemove) {
+    stickyNotes.removeOne(noteToRemove); // remove note from the vector
+    noteToRemove->deleteLater(); // delete the note safely
 }
 

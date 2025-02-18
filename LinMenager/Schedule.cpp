@@ -20,7 +20,6 @@ Schedule::Schedule(QWidget *parent) : QWidget(parent)
     QFont font_status;
     font_status.setPointSize(25);
 
-
     //Initialize buttons
     int x_pos=20;
     int y_pos = 560;

@@ -57,6 +57,8 @@ StickyNotes::StickyNotes(QWidget *parent) : QWidget(parent)
     addStickyNoteButton->setFont(font);
     addStickyNoteButton->setGeometry(x_pos + 330, y_pos, 300, 60);
     connect(addStickyNoteButton, &QPushButton::clicked, this, &StickyNotes::addStickyNote);
+
+    loadNotes();//load saved in .txt file notes
 }
 
 void StickyNotes::paintEvent(QPaintEvent *event) {
@@ -67,10 +69,12 @@ void StickyNotes::paintEvent(QPaintEvent *event) {
 
 void StickyNotes::exitApp()
 {
+    saveNotes();//save notes before closing app
     this->close();
 }
 void StickyNotes::backToMenu()//go back to welcome page
 {
+    saveNotes();//save notes before goint back to main menu
     WelcomePage *WelPage = new WelcomePage();
     WelPage->show();//display Welcome Page
     this->close();//close this page
@@ -140,4 +144,62 @@ void StickyNotes::removeStickyNote(QWidget *noteToRemove) {
     int totalWidth = (stickyNotes.size() * (250 + layout->spacing())) + layout->spacing();
     scrollWidget->setFixedWidth(totalWidth);
 }
+
+void StickyNotes::loadNotes() {
+    QFile file(notesFilePath);//create file object with the url of notesFilePath
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {//file open in read only mode in text type
+        QTextStream in(&file);//make qtextstream object called in, with the argument of file(reference becouse want to work on original file)
+        while (!in.atEnd()) {//while file is not over
+            QString content = in.readLine();//get line(one line is one note body)
+
+            if (!content.isEmpty()) {//if loaded line is not empty
+                QWidget *note = new QWidget(scrollWidget);//create new note with classic settings(like below note->)
+                note->setStyleSheet("background-color: yellow; border: 1px solid black;");
+                note->setGeometry(50 + stickyNotes.size() * 250, 50, 250, 250);
+
+                QTextEdit *textEdit = new QTextEdit(note);//if we want full note, we need to create empty rectangle with no messahe so far
+                textEdit->setGeometry(10, 10, 230, 230);
+                textEdit->setStyleSheet("Color: black;");
+                textEdit->setText(content);//we write downloaded message(line) to empty (so far) textEdit place
+
+                QPushButton *closeButton = new QPushButton("Close", note);//add close button to make note(text place + button)
+                closeButton->setStyleSheet("Color: black;");
+                closeButton->setGeometry(10, 205, 230, 35);
+
+                connect(closeButton, &QPushButton::clicked, this, [=]() {
+                    removeStickyNote(note);
+                });//connect functionality (removing note) to button closeButtn
+
+                layout->addWidget(note);//add to scrollable layout out fully created note(buton, text etc)
+                note->show();//show note
+                stickyNotes.append(note);//add to vector collecting notes
+
+                //to count total lenght of widget: stickyNotes.size() is amount of notes in vector, 20 is width of note,
+                //layout->spacing is space between notes(here is equal to 10), and to leave small gap at the end
+                //we add last space to the totalWidth
+                int totalWidth = (stickyNotes.size() * (250 + layout->spacing())) + layout->spacing();
+
+                scrollWidget->setFixedWidth(totalWidth);//if any next note is added, change size of scrollable widget
+            }
+        }
+        file.close();//if we are on the end of file with notes text, close file
+    }
+}
+
+void StickyNotes::saveNotes() {
+    QFile file(notesFilePath);//create QFile instance with the url to .txt file as argument
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {//open .txt file in write and text mode
+        QTextStream out(&file);//create QTextStream called out, with the reference to file
+        for (QWidget *note : stickyNotes) {//iterate throw all of the stickyNotes (type is QWidget)
+            QTextEdit *textEdit = note->findChild<QTextEdit *>();//look for child-> note is QWidget which has QTextEdit as child,
+            //so is QTextEdit is child of note here, it will find QTextEdit and will save it as textEdit variable(pointer type)
+
+            if (textEdit) {//if textEdit exist
+                out << textEdit->toPlainText() << "\n";//save text to .txt file and separate each note's text by new line
+            }
+        }
+        file.close();//if there are no more notes, close file
+    }
+}
+
 

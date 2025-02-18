@@ -12,6 +12,9 @@
 #include <QVector>
 #include <QScrollArea>
 #include <QHBoxLayout>
+#include <QFile>
+#include <QTextStream>
+
 
 class StickyNotes : public QWidget {
     Q_OBJECT
@@ -34,6 +37,9 @@ private:
     QVector<QWidget*> stickyNotes;//vector to hold sticky notes widgets
     QHBoxLayout *layout;//scrollable layout for notes
     QWidget *scrollWidget;//scroll widget object
+    void saveNotes();//save notes to .txt file
+    void loadNotes();//load saved notes from txt files
+    QString notesFilePath = "sticky_notes.txt";//name of .txt file where notes body will be saved
 };
 
 #endif // STICKYNOTES_H

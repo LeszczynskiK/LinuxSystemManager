@@ -39,7 +39,9 @@ private:
     QWidget *scrollWidget;//scroll widget object
     void saveNotes();//save notes to .txt file
     void loadNotes();//load saved notes from txt files
+
     QString notesFilePath = "sticky_notes.txt";//name of .txt file where notes body will be saved
+    //if not exist, it will be created in directory where app is being runned
 };
 
 #endif // STICKYNOTES_H

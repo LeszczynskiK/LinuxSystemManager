@@ -1,0 +1,25 @@
+# LinuxSystemManager
+Tool to manage linux system from 1 window
+
+A Qt-based system management tool for Linux. Monitor system performance, manage tasks, schedule reminders, and control running processes—all in one application. 
+
+Features added to program:
+1. System Monitor Display CPU, RAM, and disk usage
+2. Monitor network activity (download/upload speed/ping) : (will base on speedtest-cli)   
+To use this functionality, you have to: 
+- sudo apt update 
+- sudo apt install speedtest-cli  
+- sudo apt upgrade speedtest-cli    
+3. Task Manager - display and end running process(by typing PID number)
+4. Calendar & Reminders
+5. Display current time and date Monthly/weekly calendar view
+6. Add reminders with system notifications(based on time scheduler and displayer on typed time and date from calendar)
+- will work only if program is working(notification will be showed in any window we are on) 
+7. Sticky Notes & Notifications displayed on screen view
+- notifications are displayed at time you set up on page
+- sticky notes are in one row, multi-column system on scrollable area   
+8. Auto-save notes and notification on close
+- memory of data is based on .txt and loaded to page 
+    
+
+Acces to linux menager is after succesfull login on welcome page(hashed password and loggin)

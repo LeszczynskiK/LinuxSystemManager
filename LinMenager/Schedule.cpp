@@ -87,6 +87,8 @@ Schedule::Schedule(QWidget *parent) : QWidget(parent)
     addNotificationButton->setGeometry(x_start+150, y_start-20, 300, 60);
     addNotificationButton->setFont(font);
     connect(addNotificationButton, &QPushButton::clicked, this, &Schedule::addNotification);
+
+    loadNotificationsFromFile();//load saved notifications from .txt file
 }
 
 
@@ -120,7 +122,9 @@ void Schedule::updateDateTime()//actualise by each 1 sec
             notifications[i].first.time().hour() == currentDateTime.time().hour() &&//if current hour is equal to notification one
             notifications[i].first.time().minute() == currentDateTime.time().minute()) {//and the same with minutes..
             QMessageBox::information(this, "Notification", notifications[i].second);//.second part is notification text..
-            notifications.removeAt(i);
+            notifications.removeAt(i);//removeAt - delete element At the position of i
+
+            saveNotificationsToFile();//if notificaton displayed, remove it from .txt file...
             break;
         }
     }
@@ -139,4 +143,39 @@ void Schedule::addNotification() {
     //Add notification to list(pair of date+time and text)
     notifications.append(qMakePair(QDateTime(notificationDate, notificationTime), notificationMessage));
     notificationText->clear();//clear text field after adding
+
+    saveNotificationsToFile();//save created notification to .txt file
 }
+
+void Schedule::loadNotificationsFromFile() {
+    QFile file(notificationFile);//create QFile named file with the argument of url to .txt
+
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {//if opened in read and text mode
+        QTextStream in(&file);//create QTextStream called in with the reference to file as argument
+        while (!in.atEnd()) {//if we are not at the end on QTextStream
+            QString line = in.readLine();//get line of in
+            QStringList parts = line.split("|");//create list of string type and split elements(separator is | char)
+            if (parts.size() == 2) {//if we have 2 elements in list(we have to have becouse we separate line on 2 parts)
+                QDateTime dateTime = QDateTime::fromString(parts[0], "dd.MM.yyyy HH:mm");//first element is dateTime
+                QString message = parts[1];//2nd element is message
+                notifications.append(qMakePair(dateTime, message));//add to vector as pair these two separated by | elements
+            }
+        }
+        file.close();//if end of QTextStream(iterated throw all lines), close file
+    }
+}
+
+void Schedule::saveNotificationsToFile() {
+    QFile file(notificationFile);//create QFile called file with the argument of url to .txt file
+
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {//if opened in write and text mode
+        QTextStream out(&file);//create QTextStream variable called out, with the reference to file
+        for (const auto &notification : notifications) {//iterate throw notifications vector(pair of dateTime and message)
+            out << notification.first.toString("dd.MM.yyyy HH:mm") << "|" << notification.second << "\n";//and add to out file
+            //all of the elements of pair , with separator between 1st and 2nd element(| as separator will be recognised in loading
+            //to part the line to two fragments(1st is on tthe left of separator, 2nd is on the right of separator)
+        }
+        file.close();//if we are on the end of QTextStream, close file
+    }
+}
+
